@@ -2,7 +2,7 @@
 
 #include "IOperand.h"
 
-template<typename TType>
+template <typename TType>
 class Operand : public IOperand
 {
 public:
@@ -19,5 +19,54 @@ public:
 
 private:
 	TType mNumber;
-
+	eOperandType mType;
 };
+
+template <typename TType>
+int Operand<TType>::getPrecision() const
+{
+
+}
+
+template <typename TType>
+eOperandType Operand<TType>::getType() const
+{
+	return mType;
+}
+
+/// TODO write crate new IOperand in operator functions and call getPrecision() as first
+template <typename TType>
+const IOperand* Operand<TType>::operator+(const IOperand& rhs) const
+{
+	std::string newNumber = std::to_string(mNumber + rhs);
+}
+
+template <typename TType>
+const IOperand* Operand<TType>::operator-(const IOperand& rhs) const
+{
+	std::string newNumber = std::to_string(mNumber - rhs);
+}
+
+template <typename TType>
+const IOperand* Operand<TType>::operator*(const IOperand& rhs) const
+{
+	std::string newNumber = std::to_string(mNumber * rhs);
+}
+
+template <typename TType>
+const IOperand* Operand<TType>::operator/(const IOperand& rhs) const
+{
+	std::string newNumber = std::to_string(mNumber / rhs);
+}
+
+template <typename TType>
+const IOperand* Operand<TType>::operator%(const IOperand& rhs) const
+{
+	std::string newNumber = std::to_string(mNumber % rhs);
+}
+
+template <typename TType>
+const std::string& Operand<TType>::toString() const
+{
+	return std::to_string(mNumber);
+}

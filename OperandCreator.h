@@ -5,6 +5,8 @@
 class OperandCreator
 {
 public:
+	OperandCreator() = default;
+
 	const IOperand* createOperand(eOperandType type, const std::string& value) const;
 
 private:
@@ -15,3 +17,8 @@ private:
 	const IOperand* createDouble(const std::string& value) const;
 
 };
+
+namespace Create
+{
+	constexpr OperandCreator creator;
+}

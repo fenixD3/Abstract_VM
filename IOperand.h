@@ -1,4 +1,6 @@
-#pargma once
+#pragma once
+
+#include <string>
 
 enum class eOperandType
 {
@@ -6,7 +8,8 @@ enum class eOperandType
 	Int16,
 	Int32,
 	Float,
-	Double
+	Double,
+	Unknown
 };
 
 class IOperand

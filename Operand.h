@@ -1,11 +1,13 @@
 #pragma once
 
-#include "IOperand.h"
+#include "OperandCreator.h"
 
 template <typename TType>
 class Operand : public IOperand
 {
 public:
+	Operand(TType aNumber, eOperandType aType);
+
 	int getPrecision() const override;
 	eOperandType getType() const override;
 
@@ -20,12 +22,21 @@ public:
 private:
 	TType mNumber;
 	eOperandType mType;
+
+private:
+
 };
+
+template <typename TType>
+Operand<TType>::Operand(TType aNumber, eOperandType aType)
+	: mNumber(aNumber)
+	, mType(aType)
+{}
 
 template <typename TType>
 int Operand<TType>::getPrecision() const
 {
-
+	return static_cast<int>(mType);
 }
 
 template <typename TType>
@@ -34,39 +45,60 @@ eOperandType Operand<TType>::getType() const
 	return mType;
 }
 
-/// TODO write crate new IOperand in operator functions and call getPrecision() as first
 template <typename TType>
 const IOperand* Operand<TType>::operator+(const IOperand& rhs) const
 {
-	std::string newNumber = std::to_string(mNumber + rhs);
+	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
+	int32_t rightNum = std::stol(rhs.toString());
+	std::string newNumber = std::to_string(mNumber + rightNum);
+	return Create::creator.createOperand(resultType, newNumber);
 }
 
 template <typename TType>
 const IOperand* Operand<TType>::operator-(const IOperand& rhs) const
 {
-	std::string newNumber = std::to_string(mNumber - rhs);
+	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
+	int32_t rightNum = std::stol(rhs.toString());
+	std::string newNumber = std::to_string(mNumber - rightNum);
+	return Create::creator.createOperand(resultType, newNumber);
 }
 
 template <typename TType>
 const IOperand* Operand<TType>::operator*(const IOperand& rhs) const
 {
-	std::string newNumber = std::to_string(mNumber * rhs);
+	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
+	int32_t rightNum = std::stol(rhs.toString());
+	std::string newNumber = std::to_string(mNumber * rightNum);
+	return Create::creator.createOperand(resultType, newNumber);
 }
 
 template <typename TType>
 const IOperand* Operand<TType>::operator/(const IOperand& rhs) const
 {
-	std::string newNumber = std::to_string(mNumber / rhs);
+	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
+	int32_t rightNum = std::stol(rhs.toString());
+	std::string newNumber = std::to_string(mNumber / rightNum);
+	return Create::creator.createOperand(resultType, newNumber);
 }
 
 template <typename TType>
 const IOperand* Operand<TType>::operator%(const IOperand& rhs) const
 {
-	std::string newNumber = std::to_string(mNumber % rhs);
+	if constexpr (std::is_same_v<TType, float>
+				|| std::is_same_v<TType, double>)
+		return nullptr;
+	else
+	{
+		eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
+		int32_t rightNum = std::stol(rhs.toString());
+		std::string newNumber = std::to_string(mNumber % rightNum);
+		return Create::creator.createOperand(resultType, newNumber);
+	}
 }
 
 template <typename TType>
 const std::string& Operand<TType>::toString() const
 {
-	return std::to_string(mNumber);
+	std::string&& res = std::to_string(mNumber);
+	return res;
 }

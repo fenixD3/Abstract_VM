@@ -41,30 +41,32 @@ std::optional<Lexeme> Lexer::Tokenize(std::string_view aCommand, std::string& ou
     if (auto commandIt = std::find(Commands.begin(), Commands.end(), instruction);
             commandIt == Commands.end())
     {
-        outError += "Line " + std::to_string(mLineCount) + ": Error :" + Error::UnknownCommand;
+        outError += "Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::UnknownCommand;
         return std::nullopt;
     }
     lexeme.Instruction = std::string(instruction);
+
     if (auto commandIt = std::find(CommandsWithValue.begin(), CommandsWithValue.end(), instruction);
             commandIt != CommandsWithValue.end())
     {
         auto type = ReadToken(aCommand, '(');
         if (type.empty())
         {
-            outError += "Line " + std::to_string(mLineCount) + ": Error :" + Error::WrongCommandOrder;
+            outError += "Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::WrongCommandOrder;
             return std::nullopt;
         }
         auto operandType = ConvertTypeToEnum(type);
         if (operandType == eOperandType::Unknown)
         {
-            outError = "Line " + std::to_string(mLineCount) + ": Error :" + Error::UnknownType;
+            outError = "Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::UnknownType;
             return std::nullopt;
         }
         lexeme.Type = operandType;
+
         auto value = ReadToken(aCommand, ')');
         if (value.empty())
         {
-            outError += "Line " + std::to_string(mLineCount) + ": Error :" + Error::WrongCommandOrder;
+            outError += "Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::WrongCommandOrder;
             return std::nullopt;
         }
         lexeme.Value = std::string(value);

@@ -10,7 +10,7 @@ class Parser
 public:
     std::string_view GetError() const;
 
-    void ParseLexemes(const std::vector<Lexer::Lexeme>& aLexemeList);
+    void ParseLexemes(const std::vector<Lexer::Lexeme>& aLexemesList);
 
 private:
     std::string mError;

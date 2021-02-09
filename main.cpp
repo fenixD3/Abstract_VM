@@ -1,7 +1,6 @@
 #include <iostream>
-#include <fstream>
 
-#include "Operand.h"
+#include "Vm.h"
 #include "Lexer.h"
 #include "Parser.h"
 
@@ -24,7 +23,7 @@ std::vector<Lexer::Lexeme> ProcessLexicographicAnalysis(std::string& aFilePath)
     Lexer::LexerInfo lexemesInfo = lexer.GetLexemes();
     if (!lexemesInfo.Error.empty())
     {
-        std::cout << lexemesInfo.Error << std::endl;
+        std::cerr << lexemesInfo.Error << std::endl;
         exit(1);
     }
     return std::move(lexemesInfo.LexemesList);
@@ -36,7 +35,7 @@ void ProcessParsing(const std::vector<Lexer::Lexeme>& aLexemeList)
     parser.ParseLexemes(aLexemeList);
     if (!parser.GetError().empty())
     {
-        std::cout << parser.GetError() << std::endl;
+        std::cerr << parser.GetError() << std::endl;
         exit(1);
     }
 }
@@ -53,5 +52,7 @@ int main(int ac, char** av)
 	}
 	auto lexemesList = ProcessLexicographicAnalysis(filePath);
     ProcessParsing(lexemesList);
+    Vm abstractVm;
+    abstractVm.Process(lexemesList);
 	return 0;
 }

@@ -1,5 +1,4 @@
 #include "Vm.h"
-#include "Error.h"
 
 #include <cctype>
 
@@ -13,17 +12,13 @@ void Vm::Process(const std::vector<Lexer::Lexeme>& aLexemesList)
 		if (lexeme.isComment)
 			continue;
 		if (lexeme.Instruction == "push")
-			mStore.push_front(std::unique_ptr<const IOperand>(Create::creator.createOperand(lexeme.Type, lexeme.Value)));
+			ProcessPush(lexeme.Type, lexeme.Value);
 		else if (lexeme.Instruction == "pop")
-			mStore.pop_front();
+			ProcessPop();
 		else if (lexeme.Instruction == "dump")
-			for (const auto& value : mStore)
-				mStreamToOut << value->toString() << '\n';
+			ProcessDump();
 		else if (lexeme.Instruction == "assert")
-		{
-			if (lexeme.Type != mStore.front()->getType() || lexeme.Value != mStore.front()->toString())
-				mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::AssertIsNotTrue;
-		}
+            ProcessAssert(lexeme.Type, lexeme.Value);
 		else if (lexeme.Instruction == "add")
 		{
 			auto rightOperand = std::move(mStore.front());
@@ -49,18 +44,7 @@ void Vm::Process(const std::vector<Lexer::Lexeme>& aLexemesList)
 			mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand * *rightOperand));
 		}
 		else if (lexeme.Instruction == "div")
-		{
-			auto rightOperand = std::move(mStore.front());
-			mStore.pop_front();
-			auto leftOperand = std::move(mStore.front());
-			if (leftOperand->toString() == "0")
-			{
-				mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::DivisionZero;
-				continue;
-			}
-			mStore.pop_front();
-			mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand / *rightOperand));
-		}
+		    ProcessArithmetic(&Operand<int>::operator/, mStore.front().get());
 		else if (lexeme.Instruction == "mod")
 		{
 			auto rightOperand = std::move(mStore.front());
@@ -75,17 +59,44 @@ void Vm::Process(const std::vector<Lexer::Lexeme>& aLexemesList)
 			mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand % *rightOperand));
 		}
 		else if (lexeme.Instruction == "print")
-		{
-			if (mStore.front()->getType() != eOperandType::Int8)
-			{
-				mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::PrintError;
-				continue;
-			}
-			unsigned char number = std::stoi(mStore.front()->toString());
-			if (isprint(number))
-				mStreamToOut << number << '\n';
-		}
+            ProcessPrint();
 		else if (lexeme.Instruction == "exit")
-			return; /// TODO may be check that lexemes no longer exist
+			ProcessExit(); /// TODO may be check that lexemes no longer exist
 	}
+}
+
+void Vm::ProcessPush(eOperandType aType, const std::string& aValue)
+{
+    mStore.push_front(std::unique_ptr<const IOperand>(Create::creator.createOperand(aType, aValue)));
+}
+
+void Vm::ProcessPop()
+{
+    mStore.pop_front();
+}
+
+void Vm::ProcessDump() const
+{
+    for (const auto& value : mStore)
+        mStreamToOut << value->toString() << '\n';
+}
+
+void Vm::ProcessAssert(eOperandType aType, const std::string& aValue) const
+{
+    if (aType != mStore.front()->getType() || aValue != mStore.front()->toString())
+        mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::AssertIsNotTrue;
+}
+
+void Vm::ProcessPrint() const
+{
+    if (mStore.front()->getType() != eOperandType::Int8)
+        mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::PrintError;
+    unsigned char number = std::stoi(mStore.front()->toString());
+    if (isprint(number))
+        mStreamToOut << number << '\n';
+}
+
+void Vm::ProcessExit() const
+{
+
 }

@@ -28,23 +28,19 @@ private:
     void ProcessAssert(eOperandType aType, const std::string& aValue) const;
     void ProcessPrint() const;
     void ProcessExit() const;
+    void ProcessArithmetic();
 
-    template <typename TCallable, typename ... TArgs>
-    void ProcessArithmetic(TCallable aOperation, const TArgs ... aArgs);
+    template <typename TCallable, typename TLeft, typename TRight>
+    void ProcessArithmeticImpl(TCallable&& aOperation, TLeft&& aLeftOperand, TRight& aRightOperand);
 
 };
 
-template <typename TCallable, typename ... TArgs>
-void Vm::ProcessArithmetic(TCallable aOperation, const TArgs ... aArgs)
+template <typename TCallable, typename TLeft, typename TRight>
+void Vm::ProcessArithmeticImpl(TCallable&& aOperation, TLeft&& aLeftOperand, TRight& aRightOperand)
 {
-    auto rightOperand = std::move(mStore.front());
-    mStore.pop_front();
-    auto leftOperand = std::move(mStore.front());
-    if (leftOperand->toString() == "0")
-        mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::DivisionZero;
-    mStore.pop_front();
 //    mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand / *rightOperand));
-    decltype(auto) operand = std::invoke(aOperation, aArgs..., *leftOperand);
+//	aLeftOperand->aOperation(aRightOperand);
+	std::invoke(std::forward<TCallable>(aOperation), std::forward<TLeft>(aLeftOperand), aRightOperand);
 //    const IOperand* newNumber = aOperation(*leftOperand, *rightOperand);
 //    mStore.push_front(std::unique_ptr<const IOperand>(newNumber));
 }

@@ -44,7 +44,7 @@ void Vm::Process(const std::vector<Lexer::Lexeme>& aLexemesList)
 			mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand * *rightOperand));
 		}
 		else if (lexeme.Instruction == "div")
-		    ProcessArithmetic(&Operand<int>::operator/, mStore.front().get());
+			ProcessArithmetic();
 		else if (lexeme.Instruction == "mod")
 		{
 			auto rightOperand = std::move(mStore.front());
@@ -99,4 +99,15 @@ void Vm::ProcessPrint() const
 void Vm::ProcessExit() const
 {
 
+}
+
+void Vm::ProcessArithmetic()
+{
+	auto rightOperand = std::move(mStore.front());
+	mStore.pop_front();
+	auto leftOperand = std::move(mStore.front());
+	if (leftOperand->toString() == "0")
+		mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::DivisionZero;
+	mStore.pop_front();
+	ProcessArithmeticImpl(&Operand<int>::operator/, leftOperand.get(), *rightOperand);
 }

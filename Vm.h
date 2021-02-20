@@ -14,6 +14,8 @@ class Vm
 {
 public:
 	void Process(const std::vector<Lexer::Lexeme>& aLexemesList);
+	const std::string& GetError() const;
+    std::stringstream& GetOutput();
 
 private:
 	size_t mLineCount = 0;
@@ -27,20 +29,19 @@ private:
     void ProcessDump() const;
     void ProcessAssert(eOperandType aType, const std::string& aValue) const;
     void ProcessPrint() const;
-    void ProcessExit() const;
-    void ProcessArithmetic();
+    void ProcessArithmetic(const std::string& aOperation);
 
-    template <typename TCallable, typename TLeft, typename TRight>
-    void ProcessArithmeticImpl(TCallable&& aOperation, TLeft&& aLeftOperand, TRight& aRightOperand);
+    /*template <typename TCallable, typename TLeft, typename TRight>
+    void ProcessArithmeticImpl(TCallable aOperation, TLeft aLeftOperand, TRight& aRightOperand);*/
 
 };
 
-template <typename TCallable, typename TLeft, typename TRight>
-void Vm::ProcessArithmeticImpl(TCallable&& aOperation, TLeft&& aLeftOperand, TRight& aRightOperand)
+/*template <typename TCallable, typename TLeft, typename TRight>
+void Vm::ProcessArithmeticImpl(TCallable aOperation, TLeft aLeftOperand, TRight& aRightOperand)
 {
 //    mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand / *rightOperand));
 //	aLeftOperand->aOperation(aRightOperand);
 	std::invoke(std::forward<TCallable>(aOperation), std::forward<TLeft>(aLeftOperand), aRightOperand);
 //    const IOperand* newNumber = aOperation(*leftOperand, *rightOperand);
 //    mStore.push_front(std::unique_ptr<const IOperand>(newNumber));
-}
+}*/

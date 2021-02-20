@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 #include "Vm.h"
 #include "Lexer.h"
@@ -40,8 +41,20 @@ void ProcessParsing(const std::vector<Lexer::Lexeme>& aLexemeList)
     }
 }
 
+void Test()
+{
+    /// TODO research IO manipulators for string equaling
+    std::cout << std::setprecision(2) << std::to_string(0.) << std::endl
+            << std::to_string(0.0) << std::endl
+            << std::to_string(0.00) << std::endl;
+    std::cout << std::boolalpha << (std::string("0") == std::to_string(0.)) << std::endl
+                                << (std::string("0.") == std::to_string(0.)) << std::endl
+                                << (std::string("0.000000") == std::to_string(0.)) << std::endl;
+}
+
 int main(int ac, char** av)
 {
+//    Test();
 	std::string filePath;
 	if (ac > 1)
         filePath = av[1];
@@ -54,5 +67,11 @@ int main(int ac, char** av)
     ProcessParsing(lexemesList);
     Vm abstractVm;
     abstractVm.Process(lexemesList);
+    if (!abstractVm.GetError().empty())
+    {
+        std::cerr << abstractVm.GetError() << std::endl;
+        exit(1);
+    }
+    std::cout << abstractVm.GetOutput().str();
 	return 0;
 }

@@ -6,7 +6,7 @@ template <typename TType>
 class Operand : public IOperand
 {
 public:
-	Operand(TType aNumber, eOperandType aType);
+	Operand(TType aNumber, const std::string& aStrNumber, eOperandType aType);
 
 	int getPrecision() const override;
 	eOperandType getType() const override;
@@ -21,15 +21,15 @@ public:
 
 private:
 	TType mNumber;
+	std::string mStrNumber;
 	eOperandType mType;
-
-private:
 
 };
 
 template <typename TType>
-Operand<TType>::Operand(TType aNumber, eOperandType aType)
+Operand<TType>::Operand(TType aNumber, const std::string& aStrNumber, eOperandType aType)
 	: mNumber(aNumber)
+	, mStrNumber(aStrNumber)
 	, mType(aType)
 {}
 
@@ -49,8 +49,12 @@ template <typename TType>
 const IOperand* Operand<TType>::operator+(const IOperand& rhs) const
 {
 	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
-	int32_t rightNum = std::stol(rhs.toString());
-	std::string newNumber = std::to_string(mNumber + rightNum);
+	double rightNum = std::stod(rhs.toString());
+	std::string newNumber;
+	if (resultType == eOperandType::Float || resultType == eOperandType::Double)
+        newNumber = std::to_string(static_cast<double>(mNumber + rightNum));
+	else
+        newNumber = std::to_string(static_cast<int64_t>(mNumber + rightNum));
 	return Create::creator.createOperand(resultType, newNumber);
 }
 
@@ -58,8 +62,12 @@ template <typename TType>
 const IOperand* Operand<TType>::operator-(const IOperand& rhs) const
 {
 	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
-	int32_t rightNum = std::stol(rhs.toString());
-	std::string newNumber = std::to_string(mNumber - rightNum);
+    double rightNum = std::stod(rhs.toString());
+    std::string newNumber;
+    if (resultType == eOperandType::Float || resultType == eOperandType::Double)
+        newNumber = std::to_string(static_cast<double>(mNumber - rightNum));
+    else
+        newNumber = std::to_string(static_cast<int64_t>(mNumber - rightNum));
 	return Create::creator.createOperand(resultType, newNumber);
 }
 
@@ -67,8 +75,12 @@ template <typename TType>
 const IOperand* Operand<TType>::operator*(const IOperand& rhs) const
 {
 	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
-	int32_t rightNum = std::stol(rhs.toString());
-	std::string newNumber = std::to_string(mNumber * rightNum);
+    double rightNum = std::stod(rhs.toString());
+    std::string newNumber;
+    if (resultType == eOperandType::Float || resultType == eOperandType::Double)
+        newNumber = std::to_string(static_cast<double>(mNumber * rightNum));
+    else
+        newNumber = std::to_string(static_cast<int64_t>(mNumber * rightNum));
 	return Create::creator.createOperand(resultType, newNumber);
 }
 
@@ -76,8 +88,12 @@ template <typename TType>
 const IOperand* Operand<TType>::operator/(const IOperand& rhs) const
 {
 	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
-	int32_t rightNum = std::stol(rhs.toString());
-	std::string newNumber = std::to_string(mNumber / rightNum);
+    double rightNum = std::stod(rhs.toString());
+    std::string newNumber;
+    if (resultType == eOperandType::Float || resultType == eOperandType::Double)
+        newNumber = std::to_string(static_cast<double>(mNumber / rightNum));
+    else
+        newNumber = std::to_string(static_cast<int64_t>(mNumber / rightNum));
 	return Create::creator.createOperand(resultType, newNumber);
 }
 
@@ -90,8 +106,12 @@ const IOperand* Operand<TType>::operator%(const IOperand& rhs) const
 	else
 	{
 		eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
-		int32_t rightNum = std::stol(rhs.toString());
-		std::string newNumber = std::to_string(mNumber % rightNum);
+        int64_t rightNum = std::stoi(rhs.toString());
+        std::string newNumber;
+        if (resultType == eOperandType::Float || resultType == eOperandType::Double)
+            newNumber = std::to_string(static_cast<double>(mNumber % rightNum));
+        else
+            newNumber = std::to_string(static_cast<int64_t>(mNumber % rightNum));
 		return Create::creator.createOperand(resultType, newNumber);
 	}
 }
@@ -99,6 +119,5 @@ const IOperand* Operand<TType>::operator%(const IOperand& rhs) const
 template <typename TType>
 const std::string& Operand<TType>::toString() const
 {
-	std::string&& res = std::to_string(mNumber);
-	return res;
+	return mStrNumber;
 }

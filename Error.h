@@ -6,7 +6,7 @@ namespace Error
 constexpr char UnknownCommand[] = "Unknown command\n";
 constexpr char UnknownType[] = "Unknown type\n";
 constexpr char WrongDiapason[] = "Wrong value diapason\n";
-constexpr char PopEmptyStack[] = "Pop on a empty stack\n";
+constexpr char PopEmptyStack[] = "Pop on empty stack\n";
 constexpr char DivisionZero[] = "Division by zero\n";
 constexpr char ModuloZero[] = "Modulo by zero\n";
 constexpr char NotExit[] = "Do not exit command\n";

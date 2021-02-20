@@ -9,6 +9,7 @@ void Vm::Process(const std::vector<Lexer::Lexeme>& aLexemesList)
 		if (!mError.empty())
 			return;
 		++mLineCount;
+
 		if (lexeme.isComment)
 			continue;
 		if (lexeme.Instruction == "push")
@@ -19,49 +20,12 @@ void Vm::Process(const std::vector<Lexer::Lexeme>& aLexemesList)
 			ProcessDump();
 		else if (lexeme.Instruction == "assert")
             ProcessAssert(lexeme.Type, lexeme.Value);
-		else if (lexeme.Instruction == "add")
-		{
-			auto rightOperand = std::move(mStore.front());
-			mStore.pop_front();
-			auto leftOperand = std::move(mStore.front());
-			mStore.pop_front();
-			mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand + *rightOperand));
-		}
-		else if (lexeme.Instruction == "sub")
-		{
-			auto rightOperand = std::move(mStore.front());
-			mStore.pop_front();
-			auto leftOperand = std::move(mStore.front());
-			mStore.pop_front();
-			mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand - *rightOperand));
-		}
-		else if (lexeme.Instruction == "mul")
-		{
-			auto rightOperand = std::move(mStore.front());
-			mStore.pop_front();
-			auto leftOperand = std::move(mStore.front());
-			mStore.pop_front();
-			mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand * *rightOperand));
-		}
-		else if (lexeme.Instruction == "div")
-			ProcessArithmetic();
-		else if (lexeme.Instruction == "mod")
-		{
-			auto rightOperand = std::move(mStore.front());
-			mStore.pop_front();
-			auto leftOperand = std::move(mStore.front());
-			if (leftOperand->toString() == "0") /// TODO Check to_string in floating point as 0., 0.0 etc
-			{
-				mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::ModuloZero;
-				continue;
-			}
-			mStore.pop_front();
-			mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand % *rightOperand));
-		}
 		else if (lexeme.Instruction == "print")
             ProcessPrint();
 		else if (lexeme.Instruction == "exit")
-			ProcessExit(); /// TODO may be check that lexemes no longer exist
+			return;
+        else
+            ProcessArithmetic(lexeme.Instruction);
 	}
 }
 
@@ -84,7 +48,7 @@ void Vm::ProcessDump() const
 void Vm::ProcessAssert(eOperandType aType, const std::string& aValue) const
 {
     if (aType != mStore.front()->getType() || aValue != mStore.front()->toString())
-        mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::AssertIsNotTrue;
+        mError += "Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::AssertIsNotTrue;
 }
 
 void Vm::ProcessPrint() const
@@ -96,18 +60,40 @@ void Vm::ProcessPrint() const
         mStreamToOut << number << '\n';
 }
 
-void Vm::ProcessExit() const
-{
-
-}
-
-void Vm::ProcessArithmetic()
+void Vm::ProcessArithmetic(const std::string& aOperation)
 {
 	auto rightOperand = std::move(mStore.front());
 	mStore.pop_front();
 	auto leftOperand = std::move(mStore.front());
-	if (leftOperand->toString() == "0")
-		mError += "Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::DivisionZero;
-	mStore.pop_front();
-	ProcessArithmeticImpl(&Operand<int>::operator/, leftOperand.get(), *rightOperand);
+    mStore.pop_front();
+
+    if (aOperation == "add")
+        mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand + *rightOperand));
+    else if (aOperation == "sub")
+        mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand - *rightOperand));
+    else if (aOperation == "mul")
+        mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand * *rightOperand));
+    else if (aOperation == "div")
+    {
+        if (leftOperand->toString() == "0.000000")
+            mError += "Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::DivisionZero;
+        mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand / *rightOperand));
+    }
+    else if (aOperation == "mod")
+    {
+        if (leftOperand->toString() == "0")
+            mError += "Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::ModuloZero;
+        mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand % *rightOperand));
+    }
+//	ProcessArithmeticImpl(&Operand<int>::operator/, leftOperand.get(), *rightOperand);
+}
+
+const std::string& Vm::GetError() const
+{
+    return mError;
+}
+
+std::stringstream& Vm::GetOutput()
+{
+    return mStreamToOut;
 }

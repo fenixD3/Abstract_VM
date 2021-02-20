@@ -23,7 +23,7 @@ void Parser::ParseLexemes(const std::vector<Lexer::Lexeme>& aLexemesList)
 			++mStackSize;
 		else if (lexeme.Instruction == "pop" && !mStackSize)
 		{
-			mError += "Line " + std::to_string(mLineCount) + ": Critical Error :" + Error::PopEmptyStack;
+			mError += "Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::PopEmptyStack;
 			continue;
 		}
 		else if (lexeme.Instruction == "exit")
@@ -37,7 +37,7 @@ void Parser::ParseLexemes(const std::vector<Lexer::Lexeme>& aLexemesList)
             continue;
         if (!CheckValueDiapason(lexeme.Value, lexeme.Type))
 		{
-			mError += "Line " + std::to_string(mLineCount) + ": Critical Error :" + Error::WrongDiapason;
+			mError += "Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::WrongDiapason;
 			continue;
 		}
         if (auto commandIt = std::find(
@@ -48,14 +48,14 @@ void Parser::ParseLexemes(const std::vector<Lexer::Lexeme>& aLexemesList)
         {
             if (mStackSize < 2)
             {
-                mError += "Line " + std::to_string(mLineCount) + ": Critical Error :" + Error::StackHasFewValues;
+                mError += "Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::StackHasFewValues;
                 continue;
             }
             --mStackSize;
         }
     }
     if (!isExitInstruction)
-        mError += "Line " + std::to_string(mLineCount) + ": Critical Error :" + Error::NotExit;
+        mError += "Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::NotExit;
 }
 
 bool Parser::CheckValueDiapason(const std::string& aValue, eOperandType aType) const

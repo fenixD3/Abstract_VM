@@ -8,4 +8,4 @@ add_executable(Abstract_VM
     IOperand.h
     OperandCreator.h
     Operand.h
-    OperandCreator.cpp Vm.cpp Vm.h Lexer.cpp Lexer.h Parser.cpp Parser.h Error.h ErrorManager.cpp ErrorManager.h)
+    OperandCreator.cpp Vm.cpp Vm.h Lexer.cpp Lexer.h Parser.cpp Parser.h Error.h ErrorManager.cpp ErrorManager.h CodeAnalyzer.cpp CodeAnalyzer.h)

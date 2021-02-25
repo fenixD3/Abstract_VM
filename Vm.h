@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Operand.h"
-#include "Lexer.h"
 #include "Error.h"
+#include "CodeAnalyzer.h"
+#include "ErrorManager.h"
 
 #include <deque>
 #include <memory>
@@ -22,6 +23,9 @@ private:
 	std::deque<std::unique_ptr<const IOperand>> mStore;
 	mutable std::string mError;
 	mutable std::stringstream mStreamToOut;
+
+	std::unique_ptr<CodeAnalyzer> mCodeAnalyzer;
+	std::unique_ptr<ErrorManager> mErrorManager;
 
 private:
     void ProcessPush(eOperandType aType, const std::string& aValue);

@@ -5,6 +5,7 @@
 #include "CodeAnalyzer.h"
 #include "ErrorManager.h"
 
+#include <iostream>
 #include <deque>
 #include <memory>
 #include <sstream>
@@ -14,20 +15,22 @@
 class Vm
 {
 public:
-	void Process(const std::vector<Lexer::Lexeme>& aLexemesList);
-	const std::string& GetError() const;
+    Vm(std::string aFileName);
+	void Process();
     std::stringstream& GetOutput();
+    std::ostream& WriteError(std::ostream& outErrorStream);
 
 private:
 	size_t mLineCount = 0;
 	std::deque<std::unique_ptr<const IOperand>> mStore;
-	mutable std::string mError;
 	mutable std::stringstream mStreamToOut;
 
 	std::unique_ptr<CodeAnalyzer> mCodeAnalyzer;
 	std::unique_ptr<ErrorManager> mErrorManager;
 
 private:
+    std::vector<Lexer::Lexeme> ProcessCompilingCodeAnalyzing();
+
     void ProcessPush(eOperandType aType, const std::string& aValue);
     void ProcessPop();
     void ProcessDump() const;

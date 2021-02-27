@@ -13,7 +13,7 @@ Lexer::Lexer(std::string aFileName)
     mFileStream = std::ifstream(mFileName);
 }
 
-LexerInfo Lexer::Lexer::GetLexemes()
+LexerInfo Lexer::Lexer::GetLexemes(ErrorManager* aErrorManager)
 {
     LexerInfo resultInfo;
     for (std::string line; std::getline(mFileStream, line);)
@@ -21,14 +21,22 @@ LexerInfo Lexer::Lexer::GetLexemes()
         ++mLineCount;
         if (line.empty())
             continue;
-        auto lexeme = Tokenize(line, resultInfo.Error);
+        std::optional<Lexeme> lexeme;
+        try
+        {
+            lexeme = Tokenize(line);
+        }
+        catch (const std::exception& aError)
+        {
+            aErrorManager->AddError(aError.what());
+        }
         if (lexeme.has_value())
             resultInfo.LexemesList.push_back(std::move(lexeme.value()));
     }
     return resultInfo;
 }
 
-std::optional<Lexeme> Lexer::Tokenize(std::string_view aCommand, std::string& outError) const
+std::optional<Lexeme> Lexer::Tokenize(std::string_view aCommand) const
 {
     Lexeme lexeme;
     auto instruction = ReadToken(aCommand, ' ');
@@ -40,10 +48,7 @@ std::optional<Lexeme> Lexer::Tokenize(std::string_view aCommand, std::string& ou
 
     if (auto commandIt = std::find(Commands.begin(), Commands.end(), instruction);
             commandIt == Commands.end())
-    {
-        outError += "Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::UnknownCommand;
-        return std::nullopt;
-    }
+        throw std::logic_error("Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::UnknownCommand);
     lexeme.Instruction = std::string(instruction);
 
     if (auto commandIt = std::find(CommandsWithValue.begin(), CommandsWithValue.end(), instruction);
@@ -51,24 +56,15 @@ std::optional<Lexeme> Lexer::Tokenize(std::string_view aCommand, std::string& ou
     {
         auto type = ReadToken(aCommand, '(');
         if (type.empty())
-        {
-            outError += "Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::WrongCommandOrder;
-            return std::nullopt;
-        }
+            throw std::logic_error("Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::WrongCommandOrder);
         auto operandType = ConvertTypeToEnum(type);
         if (operandType == eOperandType::Unknown)
-        {
-            outError = "Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::UnknownType;
-            return std::nullopt;
-        }
+            throw std::logic_error("Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::UnknownType);
         lexeme.Type = operandType;
 
         auto value = ReadToken(aCommand, ')');
         if (value.empty())
-        {
-            outError += "Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::WrongCommandOrder;
-            return std::nullopt;
-        }
+            throw std::logic_error("Line " + std::to_string(mLineCount) + ": Lexical Error : " + Error::WrongCommandOrder);
         lexeme.Value = std::string(value);
     }
     return lexeme;
@@ -84,15 +80,16 @@ std::string_view Lexer::ReadToken(std::string_view& aCommand, char aDelimiter) c
 }
 
 std::pair<std::string_view, std::string_view> Lexer::SplitTwo(
-        std::string_view aCommand,
-        char aDelimiter) const
+    std::string_view aCommand,
+    char aDelimiter) const
 {
     auto[lhs, rhs] = SplitTwoStrict(aCommand, aDelimiter);
     return {lhs, rhs.value_or("")};
 }
 
-std::pair<std::string_view, std::optional<std::string_view>>
-Lexer::SplitTwoStrict(std::string_view aCommand, char aDelimiter) const
+std::pair<std::string_view, std::optional<std::string_view>> Lexer::SplitTwoStrict(
+    std::string_view aCommand,
+    char aDelimiter) const
 {
     size_t position = aCommand.find(aDelimiter);
     if (position == std::string::npos)

@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "IOperand.h"
+#include "ErrorManager.h"
 
 namespace Lexer
 {
@@ -23,7 +24,6 @@ struct Lexeme
 struct LexerInfo
 {
 	std::vector<Lexeme> LexemesList;
-	std::string Error;
 };
 
 class Lexer
@@ -31,7 +31,7 @@ class Lexer
 public:
 	Lexer(std::string aFileName);
 
-	LexerInfo GetLexemes();
+	LexerInfo GetLexemes(ErrorManager* aErrorManager);
 
 private:
 	const std::string mFileName;
@@ -39,7 +39,7 @@ private:
 	size_t mLineCount = 0;
 
 private:
-	std::optional<Lexeme> Tokenize(std::string_view aCommand, std::string& outError) const;
+	std::optional<Lexeme> Tokenize(std::string_view aCommand) const;
 	std::string_view ReadToken(std::string_view& aCommand, char aDelimiter) const;
     std::pair<std::string_view, std::string_view> SplitTwo(
         std::string_view aCommand,

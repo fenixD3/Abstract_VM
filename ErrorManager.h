@@ -6,10 +6,14 @@ class ErrorManager
 {
 public:
     void AddError(const char* aError);
-    const std::string& GetErrorStream() const;
+    bool IsEmptyError() const;
+
     friend std::ostream& operator<<(std::ostream& outStream, const ErrorManager& aError);
 
 private:
-    std::string mErrorStream;
+    std::string mError;
+
+private:
+    const std::string& GetError() const;
 
 };

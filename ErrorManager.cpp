@@ -2,16 +2,21 @@
 
 void ErrorManager::AddError(const char* aError)
 {
-    mErrorStream += aError;
+    mError += aError;
 }
 
-const std::string& ErrorManager::GetErrorStream() const
+bool ErrorManager::IsEmptyError() const
 {
-    return mErrorStream;
+    return mError.empty();
 }
 
 std::ostream& operator<<(std::ostream& outStream, const ErrorManager& aError)
 {
-    outStream << aError.GetErrorStream();
+    outStream << aError.GetError();
     return outStream;
+}
+
+const std::string& ErrorManager::GetError() const
+{
+    return mError;
 }

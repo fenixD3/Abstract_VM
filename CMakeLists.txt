@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(Abstract_VM)
 
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(Abstract_VM
-    main.cpp
-    IOperand.h
-    OperandCreator.h
-    Operand.h
-    OperandCreator.cpp Vm.cpp Vm.h Lexer.cpp Lexer.h Parser.cpp Parser.h Error.h ErrorManager.cpp ErrorManager.h CodeAnalyzer.cpp CodeAnalyzer.h)
+        srcs/main.cpp
+        includes/IOperand.h
+        includes/OperandCreator.h
+        includes/Operand.h
+        srcs/OperandCreator.cpp srcs/Vm.cpp includes/Vm.h srcs/Lexer.cpp includes/Lexer.h srcs/Parser.cpp includes/Parser.h includes/Error.h srcs/ErrorManager.cpp includes/ErrorManager.h srcs/CodeAnalyzer.cpp includes/CodeAnalyzer.h)

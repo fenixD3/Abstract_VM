@@ -1,4 +1,4 @@
-#include "Vm.h"
+#include "../includes/Vm.h"
 
 #include <cctype>
 
@@ -54,7 +54,7 @@ std::vector<Lexer::Lexeme> Vm::ProcessCompilingCodeAnalyzing()
 {
     std::vector<Lexer::Lexeme> lexemesList = mCodeAnalyzer->ProcessLexicographicAnalyzing(mErrorManager.get());
     mCodeAnalyzer->ProcessCodeParsing(lexemesList, mErrorManager.get());
-    return std::move(lexemesList);
+    return lexemesList;
 }
 
 void Vm::ProcessPush(eOperandType aType, const std::string& aValue)

@@ -1,5 +1,5 @@
-#include "Parser.h"
-#include "Error.h"
+#include "../includes/Parser.h"
+#include "../includes/Error.h"
 
 #include <limits>
 
@@ -66,30 +66,35 @@ bool Parser::CheckValueDiapason(const std::string& aValue, eOperandType aType) c
         auto number = ConvertNumberFromString<eOperandType::Int8>(aValue);
         if (number > std::numeric_limits<int8_t>::min() && number < std::numeric_limits<int8_t>::max())
             return true;
+        return false;
     }
     case eOperandType::Int16:
     {
         auto number = ConvertNumberFromString<eOperandType::Int16>(aValue);
         if (number > std::numeric_limits<int16_t>::min() && number < std::numeric_limits<int16_t>::max())
             return true;
+        return false;
     }
     case eOperandType::Int32:
     {
         auto number = ConvertNumberFromString<eOperandType::Int32>(aValue);
         if (number > std::numeric_limits<int32_t>::min() && number < std::numeric_limits<int32_t>::max())
             return true;
+        return false;
     }
     case eOperandType::Float:
     {
         auto number = ConvertNumberFromString<eOperandType::Float>(aValue);
         if (number > std::numeric_limits<float>::lowest() && number < std::numeric_limits<float>::max())
             return true;
+        return false;
     }
     case eOperandType::Double:
     {
         auto number = ConvertNumberFromString<eOperandType::Double>(aValue);
         if (number > std::numeric_limits<double>::lowest() && number < std::numeric_limits<double>::max())
             return true;
+        return false;
     }
     default:
         return false;

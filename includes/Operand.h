@@ -50,12 +50,10 @@ const IOperand* Operand<TType>::operator+(const IOperand& rhs) const
 {
 	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
 	double rightNum = std::stod(rhs.toString());
-	std::string newNumber;
 	if (resultType == eOperandType::Float || resultType == eOperandType::Double)
-        newNumber = std::to_string(static_cast<double>(mNumber + rightNum));
+        return Create::creator.createOperand(resultType, std::to_string(static_cast<double>(mNumber + rightNum)));
 	else
-        newNumber = std::to_string(static_cast<int64_t>(mNumber + rightNum));
-	return Create::creator.createOperand(resultType, newNumber);
+        return Create::creator.createOperand(resultType, std::to_string(static_cast<int64_t>(mNumber + rightNum)));
 }
 
 template <typename TType>
@@ -63,12 +61,10 @@ const IOperand* Operand<TType>::operator-(const IOperand& rhs) const
 {
 	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
     double rightNum = std::stod(rhs.toString());
-    std::string newNumber;
     if (resultType == eOperandType::Float || resultType == eOperandType::Double)
-        newNumber = std::to_string(static_cast<double>(mNumber - rightNum));
+        return Create::creator.createOperand(resultType, std::to_string(static_cast<double>(mNumber - rightNum)));
     else
-        newNumber = std::to_string(static_cast<int64_t>(mNumber - rightNum));
-	return Create::creator.createOperand(resultType, newNumber);
+        return Create::creator.createOperand(resultType, std::to_string(static_cast<int64_t>(mNumber - rightNum)));
 }
 
 template <typename TType>
@@ -76,12 +72,10 @@ const IOperand* Operand<TType>::operator*(const IOperand& rhs) const
 {
 	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
     double rightNum = std::stod(rhs.toString());
-    std::string newNumber;
     if (resultType == eOperandType::Float || resultType == eOperandType::Double)
-        newNumber = std::to_string(static_cast<double>(mNumber * rightNum));
+        return Create::creator.createOperand(resultType, std::to_string(static_cast<double>(mNumber * rightNum)));
     else
-        newNumber = std::to_string(static_cast<int64_t>(mNumber * rightNum));
-	return Create::creator.createOperand(resultType, newNumber);
+        return Create::creator.createOperand(resultType, std::to_string(static_cast<int64_t>(mNumber * rightNum)));
 }
 
 template <typename TType>
@@ -89,12 +83,10 @@ const IOperand* Operand<TType>::operator/(const IOperand& rhs) const
 {
 	eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
     double rightNum = std::stod(rhs.toString());
-    std::string newNumber;
     if (resultType == eOperandType::Float || resultType == eOperandType::Double)
-        newNumber = std::to_string(static_cast<double>(mNumber / rightNum));
+        return Create::creator.createOperand(resultType, std::to_string(static_cast<double>(mNumber / rightNum)));
     else
-        newNumber = std::to_string(static_cast<int64_t>(mNumber / rightNum));
-	return Create::creator.createOperand(resultType, newNumber);
+        return Create::creator.createOperand(resultType, std::to_string(static_cast<int64_t>(mNumber / rightNum)));
 }
 
 template <typename TType>
@@ -107,12 +99,10 @@ const IOperand* Operand<TType>::operator%(const IOperand& rhs) const
 	{
 		eOperandType resultType = (rhs.getType() > mType) ? rhs.getType() : mType;
         int64_t rightNum = std::stoi(rhs.toString());
-        std::string newNumber;
         if (resultType == eOperandType::Float || resultType == eOperandType::Double)
-            newNumber = std::to_string(static_cast<double>(mNumber % rightNum));
+            return Create::creator.createOperand(resultType, std::to_string(static_cast<double>(mNumber % rightNum)));
         else
-            newNumber = std::to_string(static_cast<int64_t>(mNumber % rightNum));
-		return Create::creator.createOperand(resultType, newNumber);
+            return Create::creator.createOperand(resultType, std::to_string(static_cast<int64_t>(mNumber % rightNum)));
 	}
 }
 

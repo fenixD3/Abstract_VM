@@ -40,11 +40,19 @@ void Parser::ProcessParsing(const Lexer::Lexeme& aLexeme, bool& aIsExitInstructi
                 Lexer::CommandsWithValue.begin(),
                 Lexer::CommandsWithValue.end(),
                 aLexeme.Instruction);
-            commandIt == Lexer::CommandsWithValue.end())
-        return;
-    if (!CheckValueDiapason(aLexeme.Value, aLexeme.Type))
-        throw std::logic_error("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::WrongDiapason);
-    if (auto commandIt = std::find(
+            commandIt != Lexer::CommandsWithValue.end())
+    {
+        try
+        {
+            if (!CheckValueDiapason(aLexeme.Value, aLexeme.Type))
+                throw std::logic_error("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::WrongDiapason);
+        }
+        catch (const std::exception& aException)
+        {
+            throw std::logic_error("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::WrongDiapason);
+        }
+    }
+    else if (auto commandIt = std::find(
                 ArithmeticCommands.begin(),
                 ArithmeticCommands.end(),
                 aLexeme.Instruction);

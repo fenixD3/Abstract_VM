@@ -17,5 +17,6 @@ constexpr char PrintError[] = "Top value is not Int8\n";
 constexpr char StackHasFewValues[] = "Stack does not have two values\n";
 
 constexpr char WrongCommandOrder[] = "Wrong command order\n";
+constexpr char InvalidOperandsForModulo[] = "Invalid operands types for binary operator%";
 
 }

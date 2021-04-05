@@ -31,7 +31,7 @@ void Vm::Process()
                 else if (lexeme.Instruction == "print")
                     ProcessPrint();
                 else if (lexeme.Instruction == "exit")
-                    return;
+                    break;
                 else
                     ProcessArithmetic(lexeme.Instruction);
             }
@@ -103,17 +103,19 @@ void Vm::ProcessArithmetic(const std::string& aOperation)
         mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand * *rightOperand));
     else if (aOperation == "div")
     {
-        if (leftOperand->toString() == "0.000000")
+        if (rightOperand->toString() == "0.000000" || rightOperand->toString() == "0")
             throw std::runtime_error("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::DivisionZero);
         mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand / *rightOperand));
     }
     else if (aOperation == "mod")
     {
-        if (leftOperand->toString() == "0")
+        if (rightOperand->toString() == "0")
             throw std::runtime_error("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::ModuloZero);
-        mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand % *rightOperand));
+        auto result = std::unique_ptr<const IOperand>(*leftOperand % *rightOperand);
+        if (!result)
+            throw std::runtime_error("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForModulo);
+        mStore.push_front(std::move(result));
     }
-//	ProcessArithmeticImpl(&Operand<int>::operator/, leftOperand.get(), *rightOperand);
 }
 
 std::stringstream& Vm::GetOutput()

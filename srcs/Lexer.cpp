@@ -74,7 +74,7 @@ std::string_view Lexer::ReadToken(std::string_view& aCommand, char aDelimiter) c
 {
     auto[token, secondPartCommand] = SplitTwo(aCommand, aDelimiter);
     aCommand = secondPartCommand;
-    if (token == ";" || token == ";;")
+    if (token == ";" || token.find(';') != std::string::npos || token == ";;")
         return "";
     return token;
 }

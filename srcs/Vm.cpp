@@ -116,6 +116,39 @@ void Vm::ProcessArithmetic(const std::string& aOperation)
             throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForModulo);
         mStore.push_front(std::move(result));
     }
+    else if (aOperation == "max")
+        mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->max(*rightOperand)));
+    else if (aOperation == "min")
+        mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->min(*rightOperand)));
+    else if (aOperation == "avg")
+        mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->avg(*rightOperand)));
+    else if (aOperation == "pow")
+    {
+        if (rightOperand->getType() > eOperandType::Int32)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::PowError);
+        mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->pow(*rightOperand)));
+    }
+    else if (aOperation == "xor")
+    {
+        auto result = std::unique_ptr<const IOperand>(*leftOperand ^ *rightOperand);
+        if (!result)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForXor);
+        mStore.push_front(std::move(result));
+    }
+    else if (aOperation == "or")
+    {
+        auto result = std::unique_ptr<const IOperand>(*leftOperand | *rightOperand);
+        if (!result)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForOr);
+        mStore.push_front(std::move(result));
+    }
+    else if (aOperation == "and")
+    {
+        auto result = std::unique_ptr<const IOperand>(*leftOperand & *rightOperand);
+        if (!result)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForAnd);
+        mStore.push_front(std::move(result));
+    }
 }
 
 std::stringstream& Vm::GetOutput()

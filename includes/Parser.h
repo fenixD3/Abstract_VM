@@ -37,4 +37,16 @@ constexpr std::array<std::string_view, 5> ArithmeticCommands = {
     "mod"
 };
 
+class ParserException : public std::logic_error
+{
+public:
+    ParserException() = default;
+    ParserException(std::string&& aError);
+    ~ParserException() = default;
+
+    ParserException(const ParserException& aOther) = default;
+    ParserException& operator=(const ParserException& aOther) = default;
+
+};
+
 }

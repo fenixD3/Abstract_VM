@@ -1,7 +1,5 @@
 #pragma once
 
-#include <exception>
-
 namespace Error
 {
 

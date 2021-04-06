@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <array>
 #include <utility>
+#include <exception>
 
 #include "IOperand.h"
 #include "ErrorManager.h"
@@ -44,9 +45,6 @@ private:
     std::pair<std::string_view, std::string_view> SplitTwo(
         std::string_view aCommand,
         char aDelimiter) const;
-    std::pair<std::string_view, std::optional<std::string_view>> SplitTwoStrict(
-        std::string_view aCommand,
-        char aDelimiter) const;
     eOperandType ConvertTypeToEnum(const std::string_view& aType) const;
 
 };
@@ -68,5 +66,18 @@ constexpr std::array<std::string_view, 11> Commands = {
 constexpr std::array<std::string_view, 2> CommandsWithValue = {
 	"push", "assert"
 };
+
+class LexerException : public std::logic_error
+{
+public:
+    LexerException() = default;
+    LexerException(std::string&& aError);
+    ~LexerException() = default;
+
+    LexerException(const LexerException& aOther) = default;
+    LexerException& operator=(const LexerException& aOther) = default;
+
+};
+
 
 }

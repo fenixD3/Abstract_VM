@@ -52,3 +52,15 @@ void Vm::ProcessArithmeticImpl(TCallable aOperation, TLeft aLeftOperand, TRight&
 //    const IOperand* newNumber = aOperation(*leftOperand, *rightOperand);
 //    mStore.push_front(std::unique_ptr<const IOperand>(newNumber));
 }*/
+
+class VmException : public std::runtime_error
+{
+public:
+    VmException() = default;
+    VmException(std::string&& aError);
+    ~VmException() = default;
+
+    VmException(const VmException& aOther) = default;
+    VmException& operator=(const VmException& aOther) = default;
+
+};

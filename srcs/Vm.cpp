@@ -35,7 +35,7 @@ void Vm::Process()
                 else
                     ProcessArithmetic(lexeme.Instruction);
             }
-            catch (const std::exception& aError)
+            catch (const VmException& aError)
             {
                 mErrorManager->AddError(aError.what());
             }
@@ -76,16 +76,16 @@ void Vm::ProcessDump() const
 void Vm::ProcessAssert(eOperandType aType, const std::string& aValue) const
 {
     if (aType != mStore.front()->getType() || aValue != mStore.front()->toString())
-        throw std::runtime_error("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::AssertIsNotTrue);
+        throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::AssertIsNotTrue);
 }
 
 void Vm::ProcessPrint() const
 {
     if (mStore.front()->getType() != eOperandType::Int8)
-        throw std::runtime_error("Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::PrintError);
+        throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::PrintError);
     unsigned char number = std::stoi(mStore.front()->toString());
     if (isprint(number))
-        mStreamToOut << number << '\n';
+        mStreamToOut << number;
 }
 
 void Vm::ProcessArithmetic(const std::string& aOperation)
@@ -104,16 +104,16 @@ void Vm::ProcessArithmetic(const std::string& aOperation)
     else if (aOperation == "div")
     {
         if (rightOperand->toString() == "0.000000" || rightOperand->toString() == "0")
-            throw std::runtime_error("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::DivisionZero);
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::DivisionZero);
         mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand / *rightOperand));
     }
     else if (aOperation == "mod")
     {
         if (rightOperand->toString() == "0")
-            throw std::runtime_error("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::ModuloZero);
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::ModuloZero);
         auto result = std::unique_ptr<const IOperand>(*leftOperand % *rightOperand);
         if (!result)
-            throw std::runtime_error("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForModulo);
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForModulo);
         mStore.push_front(std::move(result));
     }
 }
@@ -128,3 +128,7 @@ std::ostream& Vm::WriteError(std::ostream& outErrorStream)
     outErrorStream << *mErrorManager;
     return outErrorStream;
 }
+
+VmException::VmException(std::string&& aError)
+    : std::runtime_error(aError)
+{}

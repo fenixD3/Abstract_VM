@@ -1,6 +1,6 @@
 #include <iomanip>
 
-#include "../includes/Vm.h"
+#include "Vm.h"
 
 void CreateInput(const std::string& aPath, std::istream& aInput = std::cin)
 {

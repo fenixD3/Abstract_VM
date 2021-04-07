@@ -1,5 +1,5 @@
-#include "../includes/Lexer.h"
-#include "../includes/Error.h"
+#include "Lexer.h"
+#include "Error.h"
 
 #include <algorithm>
 #include <tuple>

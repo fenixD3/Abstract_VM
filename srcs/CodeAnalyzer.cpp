@@ -1,4 +1,4 @@
-#include "../includes/CodeAnalyzer.h"
+#include "CodeAnalyzer.h"
 
 CodeAnalyzer::CodeAnalyzer(std::string aFileName)
     : mLexer(std::make_unique<Lexer::Lexer>(std::move(aFileName)))

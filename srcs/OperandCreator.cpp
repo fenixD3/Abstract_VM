@@ -1,5 +1,5 @@
-#include "../includes/OperandCreator.h"
-#include "../includes/Operand.h"
+#include "OperandCreator.h"
+#include "Operand.h"
 
 const IOperand* OperandCreator::createOperand(eOperandType type, const std::string& value) const
 {

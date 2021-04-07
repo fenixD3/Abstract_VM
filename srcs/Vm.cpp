@@ -1,4 +1,5 @@
-#include "../includes/Vm.h"
+#include "Vm.h"
+#include "utils.h"
 
 #include <cctype>
 
@@ -103,7 +104,9 @@ void Vm::ProcessArithmetic(const std::string& aOperation)
         mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand * *rightOperand));
     else if (aOperation == "div")
     {
-        if (rightOperand->toString() == "0.000000" || rightOperand->toString() == "0")
+        //if (rightOperand->toString() == "0.000000" || rightOperand->toString() == "0")
+        //if (AlmostEqual2sComplement(std::stof(rightOperand->toString()), 0.0f, MaxULPS))
+        if (std::stof(rightOperand->toString()) == 0.0f)
             throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::DivisionZero);
         mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand / *rightOperand));
     }

@@ -1,5 +1,5 @@
-#include "../includes/Parser.h"
-#include "../includes/Error.h"
+#include "Parser.h"
+#include "Error.h"
 
 #include <limits>
 
@@ -49,6 +49,9 @@ void Parser::ProcessParsing(const Lexer::Lexeme& aLexeme, bool& aIsExitInstructi
         }
         catch (const std::logic_error& aException)
         {
+            const ParserException* isParserException = dynamic_cast<const ParserException*>(&aException);
+            if (isParserException)
+                throw *isParserException;
             throw ParserException("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::WrongDiapason);
         }
     }

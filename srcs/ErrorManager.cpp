@@ -1,4 +1,4 @@
-#include "../includes/ErrorManager.h"
+#include "ErrorManager.h"
 
 void ErrorManager::AddError(const char* aError)
 {

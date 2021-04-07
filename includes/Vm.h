@@ -37,6 +37,7 @@ private:
     void ProcessAssert(eOperandType aType, const std::string& aValue) const;
     void ProcessPrint() const;
     void ProcessArithmetic(const std::string& aOperation);
+    void ProcessSwap();
 
     /*template <typename TCallable, typename TLeft, typename TRight>
     void ProcessArithmeticImpl(TCallable aOperation, TLeft aLeftOperand, TRight& aRightOperand);*/

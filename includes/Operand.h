@@ -157,6 +157,8 @@ const IOperand *Operand<TType>::avg(const IOperand &rhs) const
 template<typename TType>
 const IOperand *Operand<TType>::pow(const IOperand &rhs) const
 {
+    if (rhs.getType() == eOperandType::Float || rhs.getType() == eOperandType::Double)
+        return nullptr;
     eOperandType resultType = mType;
     int64_t rightNum = std::stoi(rhs.toString());
     if (resultType == eOperandType::Float || resultType == eOperandType::Double)

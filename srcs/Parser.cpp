@@ -63,7 +63,8 @@ void Parser::ProcessParsing(const Lexer::Lexeme& aLexeme, bool& aIsExitInstructi
     {
         if (mStackSize < 2)
             throw ParserException("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::StackHasFewValues);
-        --mStackSize;
+        if (aLexeme.Instruction != "swap")
+            --mStackSize;
     }
 }
 

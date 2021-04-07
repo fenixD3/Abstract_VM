@@ -29,7 +29,7 @@ private:
 
 };
 
-constexpr std::array<std::string_view, 12> ArithmeticCommands = {
+constexpr std::array<std::string_view, 13> ArithmeticCommands = {
     "add",
     "sub",
     "mul",
@@ -41,7 +41,8 @@ constexpr std::array<std::string_view, 12> ArithmeticCommands = {
     "pow",
     "xor",
     "or",
-    "and"
+    "and",
+    "swap"
 };
 
 class ParserException : public std::logic_error

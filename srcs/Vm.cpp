@@ -32,6 +32,8 @@ void Vm::Process()
                     ProcessPrint();
                 else if (lexeme.Instruction == "exit")
                     break;
+                else if (lexeme.Instruction == "swap")
+                    ProcessSwap();
                 else
                     ProcessArithmetic(lexeme.Instruction);
             }
@@ -124,9 +126,10 @@ void Vm::ProcessArithmetic(const std::string& aOperation)
         mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->avg(*rightOperand)));
     else if (aOperation == "pow")
     {
-        if (rightOperand->getType() > eOperandType::Int32)
-            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::PowError);
-        mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->pow(*rightOperand)));
+        auto result = std::unique_ptr<const IOperand>(leftOperand->pow(*rightOperand));
+        if (!result)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::PowError);
+        mStore.push_front(std::move(result));
     }
     else if (aOperation == "xor")
     {
@@ -149,6 +152,17 @@ void Vm::ProcessArithmetic(const std::string& aOperation)
             throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForAnd);
         mStore.push_front(std::move(result));
     }
+}
+
+void Vm::ProcessSwap()
+{
+    auto upValue = std::move(mStore.front());
+    mStore.pop_front();
+    auto downValue = std::move(mStore.front());
+    mStore.pop_front();
+
+    mStore.push_front(std::move(upValue));
+    mStore.push_front(std::move(downValue));
 }
 
 std::stringstream& Vm::GetOutput()

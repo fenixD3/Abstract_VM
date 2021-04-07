@@ -49,7 +49,7 @@ private:
 
 };
 
-constexpr std::array<std::string_view, 19> Commands = {
+constexpr std::array<std::string_view, 20> Commands = {
 	"push",
 	"pop",
 	"dump",
@@ -68,7 +68,8 @@ constexpr std::array<std::string_view, 19> Commands = {
 	"xor",
 	"or",
 	"and",
-	"swap"
+	"swap",
+	"clear"
 };
 
 constexpr std::array<std::string_view, 2> CommandsWithValue = {

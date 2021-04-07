@@ -34,6 +34,8 @@ void Vm::Process()
                     break;
                 else if (lexeme.Instruction == "swap")
                     ProcessSwap();
+                else if (lexeme.Instruction == "clear")
+                    ProcessClear();
                 else
                     ProcessArithmetic(lexeme.Instruction);
             }
@@ -163,6 +165,11 @@ void Vm::ProcessSwap()
 
     mStore.push_front(std::move(upValue));
     mStore.push_front(std::move(downValue));
+}
+
+void Vm::ProcessClear()
+{
+    mStore.clear();
 }
 
 std::stringstream& Vm::GetOutput()

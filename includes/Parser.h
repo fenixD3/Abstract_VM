@@ -8,6 +8,10 @@ namespace Parser
 class Parser
 {
 public:
+	Parser() = default;
+	Parser(const Parser& aOther) = default;
+	Parser& operator=(const Parser& aOther) = default;
+
     void ParseLexemes(const std::vector<Lexer::Lexeme>& aLexemesList, ErrorManager* aErrorManager);
 
 private:
@@ -21,8 +25,10 @@ private:
     template<eOperandType TEnumType>
     auto ConvertNumberFromString(const std::string& aValue) const
     {
-        if constexpr (TEnumType == eOperandType::Float || TEnumType == eOperandType::Double)
-            return std::stold(aValue);
+        if constexpr (TEnumType == eOperandType::Float)
+            return std::stof(aValue);
+		else if constexpr (TEnumType == eOperandType::Double)
+			return std::stod(aValue);
         else
             return std::stoll(aValue);
     }
@@ -40,7 +46,6 @@ constexpr std::array<std::string_view, 5> ArithmeticCommands = {
 class ParserException : public std::logic_error
 {
 public:
-    ParserException() = default;
     ParserException(std::string&& aError);
     ~ParserException() = default;
 

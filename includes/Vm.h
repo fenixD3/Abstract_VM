@@ -15,7 +15,15 @@
 class Vm
 {
 public:
+	Vm() = default;
     Vm(std::string aFileName);
+
+    Vm(const Vm& aOther) = delete;
+    Vm& operator=(const Vm& aOther) = delete;
+
+    Vm(Vm&& aOther) = default;
+	Vm& operator=(Vm&& aOther) = default;
+
 	void Process();
     std::stringstream& GetOutput();
     std::ostream& WriteError(std::ostream& outErrorStream);
@@ -38,6 +46,8 @@ private:
     void ProcessPrint() const;
     void ProcessArithmetic(const std::string& aOperation);
 
+	bool CheckDivisionByZero(const IOperand *aOperand) const;
+
     /*template <typename TCallable, typename TLeft, typename TRight>
     void ProcessArithmeticImpl(TCallable aOperation, TLeft aLeftOperand, TRight& aRightOperand);*/
 
@@ -56,7 +66,6 @@ void Vm::ProcessArithmeticImpl(TCallable aOperation, TLeft aLeftOperand, TRight&
 class VmException : public std::runtime_error
 {
 public:
-    VmException() = default;
     VmException(std::string&& aError);
     ~VmException() = default;
 

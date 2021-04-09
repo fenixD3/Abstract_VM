@@ -7,6 +7,9 @@ class OperandCreator
 public:
 	OperandCreator() = default;
 
+	OperandCreator(const OperandCreator& aOther) = default;
+	OperandCreator& operator=(const OperandCreator& aOther) = default;
+
 	const IOperand* createOperand(eOperandType type, const std::string& value) const;
 
 private:

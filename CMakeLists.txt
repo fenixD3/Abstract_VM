@@ -10,4 +10,4 @@ add_executable(Abstract_VM
         includes/IOperand.h
         includes/OperandCreator.h
         includes/Operand.h
-        srcs/OperandCreator.cpp srcs/Vm.cpp includes/Vm.h srcs/Lexer.cpp includes/Lexer.h srcs/Parser.cpp includes/Parser.h includes/Error.h srcs/ErrorManager.cpp includes/ErrorManager.h srcs/CodeAnalyzer.cpp includes/CodeAnalyzer.h includes/utils.h srcs/utils.cpp)
+        srcs/OperandCreator.cpp srcs/Vm.cpp includes/Vm.h srcs/Lexer.cpp includes/Lexer.h srcs/Parser.cpp includes/Parser.h includes/Error.h srcs/ErrorManager.cpp includes/ErrorManager.h srcs/CodeAnalyzer.cpp includes/CodeAnalyzer.h includes/utils.h)

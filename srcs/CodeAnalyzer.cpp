@@ -9,7 +9,7 @@ std::vector<Lexer::Lexeme> CodeAnalyzer::ProcessLexicographicAnalyzing(ErrorMana
 {
     Lexer::LexerInfo lexemesInfo = mLexer->GetLexemes(aErrorManager);
     if (!aErrorManager->IsEmptyError())
-        throw std::system_error();
+        throw ErrorManagerException("");
     return std::move(lexemesInfo.LexemesList);
 }
 
@@ -17,5 +17,5 @@ void CodeAnalyzer::ProcessCodeParsing(const std::vector<Lexer::Lexeme>& aLexemeL
 {
     mParser->ParseLexemes(aLexemeList, aErrorManager);
     if (!aErrorManager->IsEmptyError())
-        throw std::system_error();
+        throw ErrorManagerException("");
 }

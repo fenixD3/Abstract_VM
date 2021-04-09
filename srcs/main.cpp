@@ -1,5 +1,5 @@
 #include <iomanip>
-
+#include <string>
 #include "Vm.h"
 
 void CreateInput(const std::string& aPath, std::istream& aInput = std::cin)
@@ -28,21 +28,10 @@ Vm InitVM(int ac, char** av)
     return Vm(std::move(filePath));
 }
 
-void Test()
-{
-    /// TODO research IO manipulators for string equaling
-    std::cout << std::setprecision(2) << std::to_string(0.) << std::endl
-              << std::to_string(0.0) << std::endl
-              << std::to_string(0.00) << std::endl
-              << std::to_string(0) << std::endl;
-    std::cout << std::boolalpha << (std::string("0") == std::to_string(0.)) << std::endl
-              << (std::string("0.") == std::to_string(0.)) << std::endl
-              << (std::string("0.000000") == std::to_string(0.)) << std::endl;
-}
+
 
 int main(int ac, char** av)
 {
-//    Test();
     Vm abstractVm = InitVM(ac, av);
     abstractVm.Process();
     std::cout << abstractVm.GetOutput().str();

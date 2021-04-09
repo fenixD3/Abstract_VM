@@ -42,9 +42,9 @@ void Vm::Process()
             }
         }
         if (!mErrorManager->IsEmptyError())
-            throw std::system_error();
+            throw ErrorManagerException("");
     }
-    catch (const std::system_error&)
+    catch (const ErrorManagerException&)
     {
         WriteError(std::cerr);
         exit(1);
@@ -86,7 +86,7 @@ void Vm::ProcessPrint() const
         throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error :" + Error::PrintError);
     unsigned char number = std::stoi(mStore.front()->toString());
     if (isprint(number))
-        mStreamToOut << number;
+        mStreamToOut << number << '\n';
 }
 
 void Vm::ProcessArithmetic(const std::string& aOperation)
@@ -103,16 +103,14 @@ void Vm::ProcessArithmetic(const std::string& aOperation)
     else if (aOperation == "mul")
         mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand * *rightOperand));
     else if (aOperation == "div")
-    {
-        //if (rightOperand->toString() == "0.000000" || rightOperand->toString() == "0")
-        //if (AlmostEqual2sComplement(std::stof(rightOperand->toString()), 0.0f, MaxULPS))
-        if (std::stof(rightOperand->toString()) == 0.0f)
+	{
+		if (CheckDivisionByZero(rightOperand.get()))
             throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::DivisionZero);
         mStore.push_front(std::unique_ptr<const IOperand>(*leftOperand / *rightOperand));
     }
     else if (aOperation == "mod")
     {
-        if (rightOperand->toString() == "0")
+    	if (CheckDivisionByZero(rightOperand.get()))
             throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::ModuloZero);
         auto result = std::unique_ptr<const IOperand>(*leftOperand % *rightOperand);
         if (!result)
@@ -130,6 +128,15 @@ std::ostream& Vm::WriteError(std::ostream& outErrorStream)
 {
     outErrorStream << *mErrorManager;
     return outErrorStream;
+}
+
+bool Vm::CheckDivisionByZero(const IOperand* aOperand) const
+{
+	if ((aOperand->getType() < eOperandType::Float && std::stoi(aOperand->toString()) == 0)
+		||(aOperand->getType() == eOperandType::Float && IsEqualTwoFloating(std::stof(aOperand->toString()), 0.0f, MaxULPS))
+		|| ((aOperand->getType() == eOperandType::Double && IsEqualTwoFloating(std::stod(aOperand->toString()), 0.0, MaxULPS))))
+		return true;
+	return false;
 }
 
 VmException::VmException(std::string&& aError)

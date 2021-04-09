@@ -70,7 +70,6 @@ constexpr std::array<std::string_view, 2> CommandsWithValue = {
 class LexerException : public std::logic_error
 {
 public:
-    LexerException() = default;
     LexerException(std::string&& aError);
     ~LexerException() = default;
 

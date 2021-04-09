@@ -10,7 +10,15 @@ class ErrorManager;
 class CodeAnalyzer
 {
 public:
+	CodeAnalyzer() = default;
     CodeAnalyzer(std::string aFileName);
+
+    CodeAnalyzer(const CodeAnalyzer& aOther) = delete;
+    CodeAnalyzer& operator=(const CodeAnalyzer& aOther) = delete;
+
+	CodeAnalyzer(CodeAnalyzer&& aOther) = default;
+	CodeAnalyzer& operator=(CodeAnalyzer&& aOther) = default;
+
     std::vector<Lexer::Lexeme> ProcessLexicographicAnalyzing(ErrorManager* aErrorManager);
     void ProcessCodeParsing(const std::vector<Lexer::Lexeme>& aLexemeList, ErrorManager* aErrorManager);
 

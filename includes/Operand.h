@@ -6,7 +6,11 @@ template <typename TType>
 class Operand : public IOperand
 {
 public:
+	Operand() = default;
 	Operand(TType aNumber, const std::string& aStrNumber, eOperandType aType);
+
+	Operand(const Operand& aOther) = default;
+	Operand& operator=(const Operand& aOther) = default;
 
 	int getPrecision() const override;
 	eOperandType getType() const override;

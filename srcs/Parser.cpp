@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include "Error.h"
+#include "utils.h"
 
 #include <limits>
 
@@ -96,14 +97,16 @@ bool Parser::CheckValueDiapason(const std::string& aValue, eOperandType aType) c
     case eOperandType::Float:
     {
         auto number = ConvertNumberFromString<eOperandType::Float>(aValue);
-        if (number > std::numeric_limits<float>::lowest() && number < std::numeric_limits<float>::max())
+        if (IsLessOrEqualFirstFloating(std::numeric_limits<float>::lowest(), number)
+        	&& IsLessOrEqualFirstFloating(number, std::numeric_limits<float>::max()))
             return true;
         return false;
     }
     case eOperandType::Double:
     {
         auto number = ConvertNumberFromString<eOperandType::Double>(aValue);
-        if (number > std::numeric_limits<double>::lowest() && number < std::numeric_limits<double>::max())
+		if (IsLessOrEqualFirstFloating(std::numeric_limits<double>::lowest(), number)
+			&& IsLessOrEqualFirstFloating(number, std::numeric_limits<double>::max()))
             return true;
         return false;
     }

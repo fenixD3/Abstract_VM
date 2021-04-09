@@ -20,3 +20,7 @@ const std::string& ErrorManager::GetError() const
 {
     return mError;
 }
+
+ErrorManagerException::ErrorManagerException(std::string&& aError)
+	: std::runtime_error(aError)
+{}

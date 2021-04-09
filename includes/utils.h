@@ -6,7 +6,7 @@
 #define MaxULPS 32
 
 template <typename TType>
-bool IsEqualTwoFloating(TType aFirst, TType aSecond, int aMaxUlps)
+bool IsEqualTwoFloating(TType aFirst, TType aSecond, unsigned aMaxUlps)
 {
 	// aMaxUlps не должен быть отрицательным и не слишком большим, чтобы
 	// NaN не был равен ни одному числу

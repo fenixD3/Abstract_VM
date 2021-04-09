@@ -28,8 +28,6 @@ Vm InitVM(int ac, char** av)
     return Vm(std::move(filePath));
 }
 
-
-
 int main(int ac, char** av)
 {
     Vm abstractVm = InitVM(ac, av);

@@ -35,7 +35,7 @@ private:
 
 };
 
-constexpr std::array<std::string_view, 13> ArithmeticCommands = {
+constexpr std::array<std::string_view, 13> NeedTwoValuesCommands = {
     "add",
     "sub",
     "mul",

@@ -2,14 +2,14 @@ SHELL = /bin/sh
 
 NAME_FILE = avm
 
-FLAGS = -Wall -Wextra -Werror -std=c++20
+FLAGS = -Wall -Wextra -Werror -std=c++2a
 
 SRCS = CodeAnalyzer.cpp ErrorManager.cpp Lexer.cpp main.cpp OperandCreator.cpp Parser.cpp Vm.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
 HEADER_PATH = ./includes/
-HEADER_FILES = CodeAnalyzer.h Error.h ErrorManager.h IOperand.h Lexer.h Operand.h OperandCreator.h Parser.h Vm.h
+HEADER_FILES = CodeAnalyzer.h Error.h ErrorManager.h IOperand.h Lexer.h Operand.h OperandCreator.h Parser.h Vm.h utils.h
 HEADERS = $(addprefix $(HEADER_PATH),$(HEADER_FILES))
 
 vpath %.cpp ./srcs

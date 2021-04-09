@@ -74,14 +74,19 @@ void Vm::ProcessPop()
 
 void Vm::ProcessDump() const
 {
+	if (mStore.empty())
+		std::cout << std::string("\e[93m") << "Warning: Dump on empty stack" << std::string("\e[39m") << '\n';
     for (const auto& value : mStore)
         mStreamToOut << value->toString() << '\n';
 }
 
 void Vm::ProcessAssert(eOperandType aType, const std::string& aValue) const
 {
-    if (aType != mStore.front()->getType() || aValue != mStore.front()->toString())
-        throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::AssertIsNotTrue);
+    if (aType != mStore.front()->getType()
+    	|| (aType < eOperandType::Float && std::stoi(aValue) == 0)
+		|| (aType == eOperandType::Float && !IsEqualTwoFloating(std::stof(aValue), std::stof(mStore.front()->toString()), MaxULPS))
+		|| ((aType == eOperandType::Double && !IsEqualTwoFloating(std::stod(aValue), std::stod(mStore.front()->toString()), MaxULPS))))
+		throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::AssertIsNotTrue);
 }
 
 void Vm::ProcessPrint() const
@@ -187,7 +192,7 @@ std::ostream& Vm::WriteError(std::ostream& outErrorStream)
 bool Vm::CheckDivisionByZero(const IOperand* aOperand) const
 {
 	if ((aOperand->getType() < eOperandType::Float && std::stoi(aOperand->toString()) == 0)
-		||(aOperand->getType() == eOperandType::Float && IsEqualTwoFloating(std::stof(aOperand->toString()), 0.0f, MaxULPS))
+		|| (aOperand->getType() == eOperandType::Float && IsEqualTwoFloating(std::stof(aOperand->toString()), 0.0f, MaxULPS))
 		|| ((aOperand->getType() == eOperandType::Double && IsEqualTwoFloating(std::stod(aOperand->toString()), 0.0, MaxULPS))))
 		return true;
 	return false;

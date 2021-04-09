@@ -32,8 +32,12 @@ void Parser::ProcessParsing(const Lexer::Lexeme& aLexeme, bool& aIsExitInstructi
         return;
     if (aLexeme.Instruction == "push")
         ++mStackSize;
-    else if (aLexeme.Instruction == "pop" && !mStackSize)
-        throw ParserException("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::PopEmptyStack);
+    else if (aLexeme.Instruction == "pop")
+	{
+    	if (!mStackSize)
+        	throw ParserException("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::PopEmptyStack);
+    	--mStackSize;
+	}
     else if (aLexeme.Instruction == "exit")
         aIsExitInstruction = true;
 
@@ -57,16 +61,18 @@ void Parser::ProcessParsing(const Lexer::Lexeme& aLexeme, bool& aIsExitInstructi
         }
     }
     else if (auto commandIt = std::find(
-                ArithmeticCommands.begin(),
-                ArithmeticCommands.end(),
+                NeedTwoValuesCommands.begin(),
+                NeedTwoValuesCommands.end(),
                 aLexeme.Instruction);
-            commandIt != ArithmeticCommands.end())
+            commandIt != NeedTwoValuesCommands.end())
     {
         if (mStackSize < 2)
             throw ParserException("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::StackHasFewValues);
         if (aLexeme.Instruction != "swap")
             --mStackSize;
     }
+    else if (aLexeme.Instruction == "print" && mStackSize <= 0)
+		throw ParserException("Line " + std::to_string(mLineCount) + ": Critical Error : " + Error::PrintStackError);
 }
 
 bool Parser::CheckValueDiapason(const std::string& aValue, eOperandType aType) const

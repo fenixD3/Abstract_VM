@@ -33,6 +33,10 @@ void Vm::Process()
                     ProcessPrint();
                 else if (lexeme.Instruction == "exit")
                     break;
+                else if (lexeme.Instruction == "swap")
+                    ProcessSwap();
+                else if (lexeme.Instruction == "clear")
+                    ProcessClear();
                 else
                     ProcessArithmetic(lexeme.Instruction);
             }
@@ -117,6 +121,56 @@ void Vm::ProcessArithmetic(const std::string& aOperation)
             throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForModulo);
         mStore.push_front(std::move(result));
     }
+    else if (aOperation == "max")
+        mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->max(*rightOperand)));
+    else if (aOperation == "min")
+        mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->min(*rightOperand)));
+    else if (aOperation == "avg")
+        mStore.push_front(std::unique_ptr<const IOperand>(leftOperand->avg(*rightOperand)));
+    else if (aOperation == "pow")
+    {
+        auto result = std::unique_ptr<const IOperand>(leftOperand->pow(*rightOperand));
+        if (!result)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::PowError);
+        mStore.push_front(std::move(result));
+    }
+    else if (aOperation == "xor")
+    {
+        auto result = std::unique_ptr<const IOperand>(*leftOperand ^ *rightOperand);
+        if (!result)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForXor);
+        mStore.push_front(std::move(result));
+    }
+    else if (aOperation == "or")
+    {
+        auto result = std::unique_ptr<const IOperand>(*leftOperand | *rightOperand);
+        if (!result)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForOr);
+        mStore.push_front(std::move(result));
+    }
+    else if (aOperation == "and")
+    {
+        auto result = std::unique_ptr<const IOperand>(*leftOperand & *rightOperand);
+        if (!result)
+            throw VmException("Line " + std::to_string(mLineCount) + ": Runtime Error : " + Error::InvalidOperandsForAnd);
+        mStore.push_front(std::move(result));
+    }
+}
+
+void Vm::ProcessSwap()
+{
+    auto upValue = std::move(mStore.front());
+    mStore.pop_front();
+    auto downValue = std::move(mStore.front());
+    mStore.pop_front();
+
+    mStore.push_front(std::move(upValue));
+    mStore.push_front(std::move(downValue));
+}
+
+void Vm::ProcessClear()
+{
+    mStore.clear();
 }
 
 std::stringstream& Vm::GetOutput()

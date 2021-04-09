@@ -45,6 +45,8 @@ private:
     void ProcessAssert(eOperandType aType, const std::string& aValue) const;
     void ProcessPrint() const;
     void ProcessArithmetic(const std::string& aOperation);
+    void ProcessSwap();
+    void ProcessClear();
 
 	bool CheckDivisionByZero(const IOperand *aOperand) const;
 

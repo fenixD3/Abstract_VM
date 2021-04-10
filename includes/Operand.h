@@ -10,6 +10,7 @@ class Operand : public IOperand
 public:
 	Operand() = default;
 	Operand(TType aNumber, const std::string& aStrNumber, eOperandType aType);
+	~Operand() override = default;
 
 	Operand(const Operand& aOther) = default;
 	Operand& operator=(const Operand& aOther) = default;

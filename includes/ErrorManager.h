@@ -1,11 +1,13 @@
 #pragma once
 
 #include <string>
+#include <stdexcept>
 
 class ErrorManager
 {
 public:
 	ErrorManager() = default;
+	~ErrorManager() = default;
 
 	ErrorManager(const ErrorManager& aOther) = default;
 	ErrorManager& operator=(const ErrorManager& aOther) = default;
@@ -27,7 +29,7 @@ class ErrorManagerException : public std::runtime_error
 {
 public:
 	ErrorManagerException(std::string&& aError);
-	~ErrorManagerException() = default;
+	~ErrorManagerException() override = default;
 
 	ErrorManagerException(const ErrorManagerException& aOther) = default;
 	ErrorManagerException& operator=(const ErrorManagerException& aOther) = default;

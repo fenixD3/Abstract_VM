@@ -12,6 +12,7 @@ class CodeAnalyzer
 public:
 	CodeAnalyzer() = default;
     CodeAnalyzer(std::string aFileName);
+    ~CodeAnalyzer() = default;
 
     CodeAnalyzer(const CodeAnalyzer& aOther) = delete;
     CodeAnalyzer& operator=(const CodeAnalyzer& aOther) = delete;

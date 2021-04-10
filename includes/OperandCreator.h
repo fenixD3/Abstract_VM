@@ -6,6 +6,7 @@ class OperandCreator
 {
 public:
 	OperandCreator() = default;
+	~OperandCreator() = default;
 
 	OperandCreator(const OperandCreator& aOther) = default;
 	OperandCreator& operator=(const OperandCreator& aOther) = default;
@@ -23,5 +24,5 @@ private:
 
 namespace Create
 {
-	constexpr OperandCreator creator;
+constexpr OperandCreator creator;
 }

@@ -9,6 +9,8 @@ class Parser
 {
 public:
 	Parser() = default;
+	~Parser() = default;
+
 	Parser(const Parser& aOther) = default;
 	Parser& operator=(const Parser& aOther) = default;
 
@@ -55,7 +57,7 @@ class ParserException : public std::logic_error
 {
 public:
     ParserException(std::string&& aError);
-    ~ParserException() = default;
+    ~ParserException() override = default;
 
     ParserException(const ParserException& aOther) = default;
     ParserException& operator=(const ParserException& aOther) = default;

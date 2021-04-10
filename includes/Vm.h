@@ -17,6 +17,7 @@ class Vm
 public:
 	Vm() = default;
     Vm(std::string aFileName);
+    ~Vm() = default;
 
     Vm(const Vm& aOther) = delete;
     Vm& operator=(const Vm& aOther) = delete;
@@ -69,7 +70,7 @@ class VmException : public std::runtime_error
 {
 public:
     VmException(std::string&& aError);
-    ~VmException() = default;
+    ~VmException() override = default;
 
     VmException(const VmException& aOther) = default;
     VmException& operator=(const VmException& aOther) = default;

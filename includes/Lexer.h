@@ -30,7 +30,15 @@ struct LexerInfo
 class Lexer
 {
 public:
+    Lexer() = default;
 	Lexer(std::string aFileName);
+	~Lexer() = default;
+
+    Lexer(const Lexer& aOther) = delete;
+    Lexer& operator=(const Lexer& aOther) = delete;
+
+    Lexer(Lexer&& aOther) = default;
+    Lexer& operator=(Lexer&& aOther) = delete;
 
 	LexerInfo GetLexemes(ErrorManager* aErrorManager);
 
@@ -80,7 +88,7 @@ class LexerException : public std::logic_error
 {
 public:
     LexerException(std::string&& aError);
-    ~LexerException() = default;
+    ~LexerException() override = default;
 
     LexerException(const LexerException& aOther) = default;
     LexerException& operator=(const LexerException& aOther) = default;

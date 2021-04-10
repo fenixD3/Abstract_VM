@@ -79,7 +79,7 @@ std::string_view Lexer::ReadToken(std::string_view& aCommand, char aDelimiter) c
     aCommand = secondPartCommand;
     auto rightSpacePos = token.find_first_of(" \n\t\r\f\v");
     if (rightSpacePos != std::string::npos)
-        token.remove_suffix(token.size() - token.find_first_of(" \n\t\r\f\v"));
+        token.remove_suffix(token.size() - rightSpacePos);
     if (token == ";" || token.find(';') != std::string::npos || token == ";;")
         return "";
     return token;

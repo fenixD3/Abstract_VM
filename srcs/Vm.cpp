@@ -192,7 +192,6 @@ std::ostream& Vm::WriteError(std::ostream& outErrorStream)
 
 bool Vm::CheckDivisionByZero(const IOperand* aOperand) const
 {
-	auto i = std::stoi(aOperand->toString());
 	if ((aOperand->getType() < eOperandType::Float && std::stoi(aOperand->toString()) == 0)
 		|| (aOperand->getType() == eOperandType::Float && IsEqualTwoFloating(std::stof(aOperand->toString()), 0.0f, MaxULPS))
 		|| ((aOperand->getType() == eOperandType::Double && IsEqualTwoFloating(std::stod(aOperand->toString()), 0.0, MaxULPS))))

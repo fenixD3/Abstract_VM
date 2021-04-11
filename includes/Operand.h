@@ -9,7 +9,7 @@ class Operand : public IOperand
 {
 public:
 	Operand() = default;
-	Operand(TType aNumber, const std::string& aStrNumber, eOperandType aType);
+	Operand(TType aNumber, eOperandType aType);
 	~Operand() override = default;
 
 	Operand(const Operand& aOther) = default;
@@ -41,9 +41,9 @@ private:
 };
 
 template <typename TType>
-Operand<TType>::Operand(TType aNumber, const std::string& aStrNumber, eOperandType aType)
+Operand<TType>::Operand(TType aNumber, eOperandType aType)
 	: mNumber(aNumber)
-	, mStrNumber(aStrNumber)
+	, mStrNumber(std::to_string(aNumber))
 	, mType(aType)
 {}
 
@@ -67,7 +67,7 @@ const IOperand* Operand<TType>::operator+(const IOperand& rhs) const
 	if (resultType == eOperandType::Float || resultType == eOperandType::Double)
         return Create::creator.createOperand(resultType, std::to_string(static_cast<double>(mNumber + rightNum)));
 	else
-        return Create::creator.createOperand(resultType, std::to_string(static_cast<int64_t>(mNumber + rightNum)));
+		return Create::creator.createOperand(resultType, std::to_string(static_cast<int64_t>(mNumber + rightNum)));
 }
 
 template <typename TType>

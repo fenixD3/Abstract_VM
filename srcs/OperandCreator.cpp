@@ -24,25 +24,25 @@ const IOperand* OperandCreator::createOperand(eOperandType type, const std::stri
 
 const IOperand* OperandCreator::createInt8(const std::string& value) const
 {
-	return new Operand<int8_t>(std::stoi(value), value, eOperandType::Int8);
+	return new Operand<int8_t>(std::stoi(value), eOperandType::Int8);
 }
 
 const IOperand* OperandCreator::createInt16(const std::string& value) const
 {;
-	return new Operand<int16_t>(std::stoi(value), value, eOperandType::Int16);
+	return new Operand<int16_t>(std::stoi(value), eOperandType::Int16);
 }
 
 const IOperand* OperandCreator::createInt32(const std::string& value) const
 {
-	return new Operand<int32_t>(std::stoi(value), value, eOperandType::Int32);
+	return new Operand<int32_t>(std::stoi(value), eOperandType::Int32);
 }
 
 const IOperand* OperandCreator::createFloat(const std::string& value) const
 {
-	return new Operand<float>(std::stof(value), value, eOperandType::Float);
+	return new Operand<float>(std::stof(value), eOperandType::Float);
 }
 
 const IOperand* OperandCreator::createDouble(const std::string& value) const
 {
-	return new Operand<double>(std::stod(value), value, eOperandType::Double);
+	return new Operand<double>(std::stod(value), eOperandType::Double);
 }

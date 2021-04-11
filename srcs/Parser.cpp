@@ -83,21 +83,21 @@ bool Parser::CheckValueDiapason(const std::string& aValue, eOperandType aType) c
     case eOperandType::Int8:
     {
         auto number = ConvertNumberFromString<eOperandType::Int8>(aValue);
-        if (number > std::numeric_limits<int8_t>::min() && number < std::numeric_limits<int8_t>::max())
+        if (number >= std::numeric_limits<int8_t>::min() && number <= std::numeric_limits<int8_t>::max())
             return true;
         return false;
     }
     case eOperandType::Int16:
     {
         auto number = ConvertNumberFromString<eOperandType::Int16>(aValue);
-        if (number > std::numeric_limits<int16_t>::min() && number < std::numeric_limits<int16_t>::max())
+        if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
             return true;
         return false;
     }
     case eOperandType::Int32:
     {
         auto number = ConvertNumberFromString<eOperandType::Int32>(aValue);
-        if (number > std::numeric_limits<int32_t>::min() && number < std::numeric_limits<int32_t>::max())
+        if (number >= std::numeric_limits<int32_t>::min() && number <= std::numeric_limits<int32_t>::max())
             return true;
         return false;
     }
